@@ -1,7 +1,7 @@
 [Review Assignment Due Date](https://classroom.github.com/a/fQk_oUCZ)
 
 # Desarrollo de Aplicaciones Web
-DESPLIEGUE:https://69ceeae936a61a271d5abf2c--candid-otter-145f07.netlify.app/
+DESPLIEGUE JULIAN CORDERO Y ALEJANDRO GOMEZ:https://69ceeae936a61a271d5abf2c--candid-otter-145f07.netlify.app/
 ## Introducción al Asíncronismo
 
 ## Funcionalidades
