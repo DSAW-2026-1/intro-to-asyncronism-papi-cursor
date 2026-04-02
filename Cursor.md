@@ -20,10 +20,11 @@ Este documento resume acuerdos, requisitos y estado del trabajo para que cualqui
 
 1. **HTML:** estructura semántica, formulario de búsqueda, estados de carga/error, tarjeta con nombre/peso/descripción/imagen, tipos, sección para listar Pokémon por tipo (tercer endpoint).
 2. **CSS:** estilos en archivo aparte, enlazado desde `index.html`.
-3. **JS (pendiente):** `fetch` + `async/await`; llamadas a, por ejemplo:
-   - `GET /api/v2/pokemon/{id or name}` — nombre, peso, sprites.
-   - `GET /api/v2/pokemon-species/{id or name}` — descripción (`flavor_text_entries`).
-   - `GET /api/v2/type/{type}` u otro tercer endpoint — exploración por tipo o listado.
+3. **JS (implementado en `script.js`):** `fetch` + `async/await` contra `https://pokeapi.co/api/v2/`:
+   - **`GET /pokemon/{id or name}`** — ficha: nombre, peso (mostrado en kg a partir de hectogramas), sprite (`official-artwork` si existe, si no `front_default`), tipos como botones.
+   - **`GET`** desde la URL de **`pokemon.species`** (equivale a `pokemon-species/{id}`) — descripción vía `flavor_text_entries` (**es**, respaldo **en**).
+   - **`GET /pokemon?limit=1&offset=…`** — elegir un Pokémon al azar dentro del `count` total de la API.
+   - **`GET /type/{name}`** — al pulsar un tipo, se rellena `#type-explore-section` (hasta 36 Pokémon de ese tipo; cada ítem carga otra ficha).
 4. **Despliegue:** cuando se elija plataforma, configurar proyecto estático y probar URL pública.
 
 ## Archivos en el repo (estado actual)
@@ -31,13 +32,12 @@ Este documento resume acuerdos, requisitos y estado del trabajo para que cualqui
 | Archivo        | Rol |
 |----------------|-----|
 | `README.md`    | Enunciado de la tarea (GitHub Classroom). |
-| `index.html`   | Marcado: cabecera, búsqueda (`#search-form`, `#search-input`, `#random-button`), estados (`#status-loading`, `#status-error`), tarjeta (`#pokemon-section`, `#pokemon-name`, `#pokemon-image-container`, `#pokemon-weight`, `#pokemon-description`, `#pokemon-types`), sección tipo (`#type-explore-section`, `#type-explore-hint`, `#type-pokemon-list`). |
+| `index.html`   | Marcado: cabecera, búsqueda (`#search-form`, `#search-input`, `#random-button`), estados (`#status-loading`, `#status-error`), tarjeta (`#pokemon-section`, `#pokemon-name`, `#pokemon-image-container`, `#pokemon-weight`, `#pokemon-description`, `#pokemon-types`), sección tipo (`#type-explore-section`, `#type-explore-hint`, `#type-pokemon-list`). Incluye `<script src="script.js" defer></script>`. |
 | `styles.css`   | Estilos con **paleta oficial Pokédex** (`:root` con `--pk-*` + roles semánticos). Tema claro, cabecera roja. Enlazado con `<link rel="stylesheet" href="styles.css" />`. |
+| `script.js`    | Lógica de PokeAPI: búsqueda por formulario, Pokémon aleatorio, estados de carga/error, tarjeta con especies/descripción, exploración por tipo (`#pokemon-types` → `/type/{name}`). |
 | `Cursor.md`    | Esta memoria de contexto. |
 
-**Aún no existe:** `script.js` / `app.js` ni lógica de API en el HTML.
-
-## IDs y hooks útiles para el próximo paso (JS)
+## IDs y hooks (referencia; usados por `script.js`)
 
 - Formulario: `#search-form`, input `#search-input`, botón aleatorio `#random-button`.
 - UI de estado: `#status-loading`, `#status-error`.
@@ -50,6 +50,7 @@ Este documento resume acuerdos, requisitos y estado del trabajo para que cualqui
 
 ## Notas para quien continúe
 
-- Respetar el requisito de **mínimo 3 endpoints** y que **cada flujo de consulta** muestre nombre, peso, descripción y foto.
-- Al implementar tipos: si los tipos son botones que cargan `/type/{name}`, conviene estilos ya previstos en `.pokemon-card__type-list button` (o enlaces equivalentes).
+- Para la rúbrica de **al menos 3 endpoints distintos** cuentan sobre todo **`/pokemon/{…}`**, la especie (**`/pokemon-species/…`** vía `pokemon.species.url`) y **`/type/{…}`**; el listado **`/pokemon?limit=1&offset=…`** es auxiliar para el aleatorio. La búsqueda y el aleatorio muestran nombre, peso, descripción y foto.
+- Los tipos en la ficha son **botones** que llaman a `/type/{name}`; la lista usa `.type-explore__list li button` para cargar otra ficha.
+- Pendiente principal: **despliegue** (Vercel o Netlify) y comprobar la URL pública.
 - No asumir que el README fue modificado localmente; la fuente de verdad del enunciado sigue siendo el README del assignment si difiere.
